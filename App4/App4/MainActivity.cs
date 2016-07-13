@@ -11,7 +11,7 @@ using System.Collections.Generic;
 
 namespace App4
 {
-    [Activity(Label = "App4", MainLauncher = false, Icon = "@drawable/icon")]
+    [Activity(Label = "App4", MainLauncher = true, Icon = "@drawable/icon")]
     [IntentFilter(new[] { Intent.ActionSend }, Categories = new[] {
     Intent.CategoryDefault,
     Intent.CategoryBrowsable
@@ -22,7 +22,7 @@ namespace App4
 
         protected override void OnCreate(Bundle bundle)
         {
-            
+            string share;
             base.OnCreate(bundle);
 
             // Set our view from the "main" layout resource
@@ -41,13 +41,17 @@ namespace App4
             EditText ET = FindViewById<EditText>(Resource.Id.edit_text);
             TextView testTV = FindViewById<TextView>(Resource.Id.text_view);
             Button button = FindViewById<Button>(Resource.Id.MyButton);
-            share = Intent.GetStringExtra(Intent.ExtraText);
-            testTV.Text = "FATBOY";
+            Intent intent = new Intent();
+            share = intent.GetStringExtra(Intent.ExtraText);
+            button.Click += delegate
+            {
+                testTV.Text = share;
+            };
             testTV.Text = share;
 
 
         }
-        
+
         protected override void OnPause()
         {
             base.OnPause();
@@ -65,7 +69,7 @@ namespace App4
             //  Array array = new byte[NdefRecord.RtdUri.Count];
             // NdefRecord.RtdUri.CopyTo(array, 0);
             var result = new byte[NdefRecord.RtdUri.Count];
-            NdefRecord.RtdUri.CopyTo(result, 0);
+            NdefRecord.RtdUri.CopyTo(result, 0);   
 
             NfcManager manager = (NfcManager)GetSystemService(NfcService);
             NdefRecord record = new NdefRecord(NdefRecord.TnfAbsoluteUri,result,new byte[0], System.Text.Encoding.Default.GetBytes(share));
